@@ -1,0 +1,21 @@
+{
+  "name": "colored-music",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/audio.test.js tests/game.test.js tests/stardust.test.js",
+    "test:browser": "playwright test",
+    "format": "prettier --write src tests index.html docs README.md *.json *.js",
+    "format:check": "prettier --check src tests index.html docs README.md *.json *.js",
+    "preview:lan": "vite preview --host 0.0.0.0 --port 4174 --strictPort"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "prettier": "^3.9.9",
+    "vite": "^6.4.1"
+  }
+}

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#101111" />
+    <meta
+      name="description"
+      content="Tu música, en otra dimensión. Seis mundos audiovisuales que viven al ritmo de tus canciones."
+    />
+    <title>Colored Music — Ve lo que sientes</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%23c4f479'/%3E%3Cpath d='M12 20v8m8-16v24m8-20v16m8-10v4' stroke='%23101111' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <header class="header">
+        <a class="brand" href="./" aria-label="Colored Music, inicio"
+          ><span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+          >colored<span>music</span><span class="version">/ 02</span></a
+        >
+        <div class="header-right">
+          <span class="local-note"><span class="status-dot"></span> Tu música se queda contigo</span
+          ><button class="button" id="library-open">
+            <span data-icon="library"></span> Mi biblioteca
+            <span id="track-count" class="count">1</span></button
+          ><button class="button primary" id="upload">
+            <span data-icon="plus"></span> Cargar música
+          </button>
+        </div>
+      </header>
+      <main>
+        <div class="intro">
+          <div>
+            <div class="eyebrow">UN EXPERIMENTO AUDIOVISUAL</div>
+            <h1>Ve lo que <em>sientes.</em></h1>
+          </div>
+          <p>Una canción. Seis universos.<br />Déjate llevar por el sonido.</p>
+        </div>
+        <section class="stage" id="stage" aria-label="Visualización musical">
+          <canvas id="visual" aria-label="Visualización abstracta reactiva al audio"></canvas
+          ><canvas id="game" hidden aria-label="Plataformas 2D dirigido por la música"></canvas>
+          <div class="stage-top">
+            <div class="scene-pill">
+              <span class="status-dot" id="live-dot"></span
+              ><span id="scene-category">ARTE GENERATIVO</span><span class="divider"></span
+              ><span id="scene-number">01 / 06</span>
+            </div>
+            <div class="stage-tools">
+              <button
+                class="icon-button"
+                id="info"
+                aria-label="Cómo reacciona a la música"
+                title="Cómo reacciona a la música"
+              >
+                <span data-icon="info"></span></button
+              ><button
+                class="icon-button"
+                id="fullscreen"
+                aria-label="Pantalla completa"
+                title="Pantalla completa · F"
+              >
+                <span data-icon="expand"></span>
+              </button>
+            </div>
+          </div>
+          <div class="scene-caption">
+            <div class="eyebrow" id="scene-kicker">SONIDO HECHO MATERIA</div>
+            <h2 id="scene-title">Resonance</h2>
+            <p id="scene-description">Cada frecuencia deja su órbita.</p>
+          </div>
+          <div class="start-hint" id="start-hint">
+            <button id="start" class="start-button"><span data-icon="play"></span></button
+            ><span>Dale al play. Entra en otra dimensión.</span>
+          </div>
+          <div class="game-hud" id="game-hud" hidden>
+            <span>UN CAMINO DE NOTAS</span><strong id="game-action">Preparado</strong
+            ><small id="game-reason">Esperando la música</small>
+            <div><span id="game-combo">0</span> notas · <span id="game-jumps">0</span> saltos</div>
+            <div class="game-mapping" aria-label="Relación entre sonido y movimiento">
+              <span id="jump-cue">GOLPE MARCADO ↟ SALTO</span>
+              <span id="collect-cue">MEDIOS ◇ ATRACCIÓN</span>
+              <span id="sparkle-cue">AGUDOS ✧ BRILLO</span>
+            </div>
+          </div>
+          <div class="stage-bottom">
+            <span id="play-status">LISTO PARA ESCUCHAR</span>
+            <div class="signal">
+              <span
+                >GRAVES <i><b id="bass-meter"></b></i></span
+              ><span
+                >MEDIOS <i><b id="mid-meter"></b></i></span
+              ><span
+                >AGUDOS <i><b id="high-meter"></b></i
+              ></span>
+            </div>
+          </div>
+          <div class="drop-overlay" id="drop-overlay" hidden>
+            <span data-icon="upload"></span><strong>Suelta tu próxima canción</strong
+            ><span>El sonido empieza aquí.</span>
+          </div>
+          <div class="immersive-player">
+            <button class="icon-button" id="immersive-play" aria-label="Reproducir">
+              <span data-icon="play"></span></button
+            ><span id="immersive-title">Neon afterglow</span
+            ><button
+              class="icon-button"
+              id="exit-fullscreen"
+              aria-label="Salir de pantalla completa"
+            >
+              <span data-icon="expand"></span>
+            </button>
+          </div>
+        </section>
+        <section class="player" aria-label="Reproductor">
+          <div class="track">
+            <div class="cover"><span data-icon="wave"></span></div>
+            <div class="track-text">
+              <strong id="track-title">Neon afterglow</strong
+              ><span id="track-artist">Colored Music · Demo original</span>
+            </div>
+            <span class="demo-badge" id="demo-badge">DEMO</span>
+          </div>
+          <div class="transport">
+            <div class="transport-buttons">
+              <button
+                class="icon-button"
+                id="previous"
+                aria-label="Canción anterior"
+                title="Anterior"
+              >
+                <span data-icon="previous"></span></button
+              ><button
+                class="play-button"
+                id="play"
+                aria-label="Reproducir"
+                title="Reproducir · Espacio"
+              >
+                <span data-icon="play"></span></button
+              ><button
+                class="icon-button"
+                id="next"
+                aria-label="Siguiente canción"
+                title="Siguiente"
+              >
+                <span data-icon="next"></span></button
+              ><button
+                class="icon-button loop"
+                id="loop"
+                aria-label="Repetir canción"
+                aria-pressed="false"
+                title="Repetir canción"
+              >
+                <span data-icon="repeat"></span>
+              </button>
+            </div>
+            <div class="seek-row">
+              <span id="elapsed">0:00</span
+              ><input
+                id="seek"
+                type="range"
+                min="0"
+                max="96"
+                value="0"
+                step="0.1"
+                aria-label="Posición de reproducción"
+              /><span id="duration">1:36</span>
+            </div>
+          </div>
+          <div class="volume">
+            <button class="icon-button" id="mute" aria-label="Silenciar">
+              <span data-icon="volume"></span></button
+            ><input
+              type="range"
+              id="volume"
+              min="0"
+              max="1"
+              step="0.01"
+              value="0.7"
+              aria-label="Volumen"
+            /><span id="volume-value">70%</span>
+          </div>
+        </section>
+        <section class="experiences" aria-label="Seleccionar visualizador">
+          <div class="section-heading">
+            <h2>Elige tu universo <span>06 experiencias</span></h2>
+            <span class="keyboard-hint">Cambia de perspectiva <kbd>1</kbd> — <kbd>6</kbd></span>
+          </div>
+          <div class="visualizer-grid" id="visualizer-grid"></div>
+        </section>
+        <footer>
+          <span><span class="status-dot"></span> Hecho para escuchar. Diseñado para sentir.</span>
+          <div>
+            <button id="motion" aria-pressed="false">Movimiento suave</button
+            ><span class="footer-divider">/</span><span>Web Audio × Generative art</span>
+          </div>
+        </footer>
+      </main>
+    </div>
+    <input
+      type="file"
+      id="file-input"
+      accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac,.aac,.opus"
+      multiple
+      hidden
+    />
+    <dialog id="library-dialog">
+      <div class="dialog-heading">
+        <div>
+          <div class="eyebrow">TU COLECCIÓN</div>
+          <h2>Mi biblioteca</h2>
+        </div>
+        <button class="icon-button close-dialog" aria-label="Cerrar biblioteca">
+          <span data-icon="close"></span>
+        </button>
+      </div>
+      <p>Archivos locales. Sin cuentas, sin subidas.</p>
+      <div id="library-list"></div>
+      <button class="button primary wide" id="library-upload">
+        <span data-icon="plus"></span> Añadir canciones
+      </button>
+      <p class="small">
+        MP3, WAV, OGG, M4A y otros formatos compatibles con tu navegador. La biblioteca local dura
+        esta sesión.
+      </p>
+    </dialog>
+    <dialog id="info-dialog">
+      <div class="dialog-heading">
+        <div>
+          <div class="eyebrow">DETRÁS DEL MOVIMIENTO</div>
+          <h2 id="info-title">Resonance</h2>
+        </div>
+        <button class="icon-button close-dialog" aria-label="Cerrar información">
+          <span data-icon="close"></span>
+        </button>
+      </div>
+      <p id="info-description"></p>
+      <div class="audio-facts">
+        <div><span>GRAVES</span><strong>20 — 250 Hz</strong></div>
+        <div><span>MEDIOS</span><strong>250 — 4k Hz</strong></div>
+        <div><span>AGUDOS</span><strong>4k — 16k Hz</strong></div>
+      </div>
+      <p class="small">
+        Los golpes se estiman a partir de los transitorios del audio. No se utiliza un metrónomo
+        prefijado. En silencio, las reacciones musicales se detienen.
+      </p>
+      <p class="small">
+        Atajos: espacio · reproducir / pausa, 1–6 · universo, F · pantalla completa, M · silencio.
+        Movimiento suave reduce velocidad y destellos.
+      </p>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
