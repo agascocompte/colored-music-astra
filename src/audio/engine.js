@@ -4,6 +4,7 @@ export class AudioEngine extends EventTarget {
   constructor() {
     super();
     this.media = new Audio();
+    this.media.crossOrigin = 'anonymous';
     this.media.preload = 'metadata';
     this.media.setAttribute('playsinline', '');
     this.context = null;

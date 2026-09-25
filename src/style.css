@@ -843,6 +843,68 @@ dialog .small {
   overflow: auto;
   margin: 20px 0;
 }
+.library-tabs {
+  display: flex;
+  gap: 6px;
+  margin-top: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.library-tabs button {
+  flex: 1;
+  background: transparent;
+  color: var(--muted);
+  padding: 12px 8px;
+  border-bottom: 2px solid transparent;
+}
+.library-tabs [aria-selected='true'] {
+  color: var(--lime);
+  border-color: var(--lime);
+}
+.music-search label {
+  display: block;
+  font-size: 11px;
+  color: #aab69f;
+  margin-bottom: 8px;
+}
+.music-search > div {
+  display: flex;
+  gap: 8px;
+}
+.music-search input {
+  min-width: 0;
+  width: 100%;
+  border: 1px solid #454d3a;
+  border-radius: 8px;
+  padding: 12px;
+  background: #111610;
+  color: var(--text);
+  font-size: 12px;
+}
+.music-search button {
+  flex-shrink: 0;
+  padding: 12px;
+}
+#search-results {
+  max-height: 36vh;
+  overflow: auto;
+}
+.search-result {
+  border-bottom: 1px solid #343d2d;
+  padding-bottom: 10px;
+}
+.search-result .library-item {
+  border: 0;
+}
+.search-result > a {
+  margin-left: 37px;
+  font-size: 10px;
+  color: var(--lime);
+}
+#track-store {
+  font-size: 9px;
+  color: var(--lime);
+  margin-top: 3px;
+}
 .library-item {
   display: flex;
   width: 100%;

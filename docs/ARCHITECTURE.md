@@ -49,6 +49,10 @@ La búsqueda de previews externos no se conserva: no era requisito de esta nueva
 
 ## Relación musical verificable
 
+La biblioteca remota tiene una sola fuente: `library.json` en el repositorio original `colored-music`, con rutas de audio relativas al catálogo. Ambas aplicaciones leen ese archivo; Astra resuelve sus URLs sin duplicar MP3 ni listas. El catálogo se carga sin bloquear el arranque, con validación, tiempo límite y reintento. Las adiciones locales se insertan después de leer sus metadatos, evitando que una respuesta tardía del catálogo cambie el índice de reproducción.
+
+La búsqueda añade una pestaña al diálogo de biblioteca. Usa el endpoint público de iTunes mediante JSONP documentado, control de resultados obsoletos, cancelación y límite de tiempo. Los fragmentos se distinguen de las canciones completas y conservan un enlace a la tienda. Se deduplican por `trackId`. Se usa `crossOrigin = 'anonymous'` antes de asignar cualquier fuente para evitar que Web Audio silencie el análisis de los audios remotos por CORS. Las búsquedas y archivos locales duran la sesión y no modifican el catálogo compartido.
+
 Las bandas y el estado musical vienen exclusivamente del audio reproducido. No se inyectan señales demo en el detector, ni hay una pista oculta de control. Las miniaturas sí se generan con una muestra estática ilustrativa antes de comenzar. En pausa se congela el tiempo, y en silencio no se disparan eventos musicales. El ambiente gráfico tiene geometría procedural determinista; los cambios de luz, velocidad y acciones tienen entradas auditables en las características del analizador.
 
 Los tests de señal separan esta promesa de la apariencia: silencio y sostenidos no deben producir falsos golpes continuos; los transitorios periódicos deben generar eventos acotados. Los tests del juego evalúan también el caso sin beats y la estabilidad entre tasas de refresco. Playwright verifica que la conexión real entre reproductor, análisis, interfaz y canvas funciona en Chromium.

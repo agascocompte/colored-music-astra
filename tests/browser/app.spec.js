@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+test.beforeEach(async ({ page }) => {
+  await page.route('https://agascocompte.github.io/colored-music/library.json', (route) =>
+    route.fulfill({ json: { version: 1, tracks: [] } }),
+  );
+});
+
 test('Six visualizers, real playback, seeking, volume, fullscreen and responsive layout', async ({
   page,
 }) => {

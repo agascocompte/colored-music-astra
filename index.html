@@ -120,6 +120,9 @@
             <div class="track-text">
               <strong id="track-title">Neon afterglow</strong
               ><span id="track-artist">Colored Music · Demo original</span>
+              <a id="track-store" target="_blank" rel="noopener noreferrer" hidden
+                >Fragmento de iTunes · Ver canción ↗</a
+              >
             </div>
             <span class="demo-badge" id="demo-badge">DEMO</span>
           </div>
@@ -216,15 +219,61 @@
           <span data-icon="close"></span>
         </button>
       </div>
-      <p>Archivos locales. Sin cuentas, sin subidas.</p>
-      <div id="library-list"></div>
-      <button class="button primary wide" id="library-upload">
-        <span data-icon="plus"></span> Añadir canciones
-      </button>
-      <p class="small">
-        MP3, WAV, OGG, M4A y otros formatos compatibles con tu navegador. La biblioteca local dura
-        esta sesión.
-      </p>
+      <div class="library-tabs" role="tablist" aria-label="Origen de la música">
+        <button
+          id="tab-collection"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-collection"
+        >
+          Mi colección
+        </button>
+        <button
+          id="tab-search"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-search"
+          tabindex="-1"
+        >
+          Buscar música
+        </button>
+      </div>
+      <section id="panel-collection" role="tabpanel" aria-labelledby="tab-collection">
+        <p id="library-status" role="status">Cargando tu biblioteca compartida…</p>
+        <button class="button" id="library-retry" hidden>Reintentar</button>
+        <div id="library-list"></div>
+        <button class="button primary wide" id="library-upload">
+          <span data-icon="plus"></span> Añadir archivos locales
+        </button>
+        <p class="small">
+          Tus archivos se quedan en este equipo y duran esta sesión. MP3, WAV, OGG, M4A y otros
+          formatos compatibles.
+        </p>
+      </section>
+      <section id="panel-search" role="tabpanel" aria-labelledby="tab-search" hidden>
+        <p>Encuentra una canción o un artista y escucha su fragmento de iTunes.</p>
+        <form id="music-search" class="music-search">
+          <label for="music-query">Canción o artista</label>
+          <div>
+            <input
+              type="search"
+              id="music-query"
+              placeholder="Coldplay, Imagine Dragons…"
+              maxlength="160"
+              required
+              autocomplete="off"
+            /><button class="button primary" type="submit">Buscar</button>
+          </div>
+        </form>
+        <p id="search-status" class="small" role="status">
+          Fragmentos de unos 30 segundos; no son canciones completas.
+        </p>
+        <div id="search-results" aria-busy="false"></div>
+        <p class="small">
+          Fragmentos proporcionados por iTunes. Abre «Ver en iTunes» para acceder a la canción
+          completa en su tienda.
+        </p>
+      </section>
     </dialog>
     <dialog id="info-dialog">
       <div class="dialog-heading">

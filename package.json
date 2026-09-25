@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node --test tests/audio.test.js tests/game.test.js tests/stardust.test.js",
+    "test": "node --test tests/audio.test.js tests/game.test.js tests/stardust.test.js tests/catalogue.test.js",
     "test:browser": "playwright test",
     "format": "prettier --write src tests index.html docs README.md *.json *.js",
     "format:check": "prettier --check src tests index.html docs README.md *.json *.js",

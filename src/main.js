@@ -3,6 +3,8 @@ import { icon, hydrateIcons } from './icons.js';
 import { AudioEngine } from './audio/engine.js';
 import { emptyFeatures } from './audio/features.js';
 import { readMetadata } from './audio/metadata.js';
+import { loadCatalogue } from './audio/catalogue.js';
+import { searchMusic } from './audio/search.js';
 import { scenes } from './visuals/scenes.js';
 import { ShaderRenderer, FallbackRenderer } from './visuals/renderer.js';
 import { BeatWorld } from './game/director.js';
@@ -103,7 +105,11 @@ function updateTrack() {
   $('track-title').textContent = t.title;
   $('track-artist').textContent = t.artist;
   $('immersive-title').textContent = t.title;
-  $('demo-badge').hidden = !t.demo;
+  $('demo-badge').hidden = !t.demo && !t.preview;
+  $('demo-badge').textContent = t.preview ? 'FRAGMENTO' : 'DEMO';
+  $('track-store').hidden = !t.storeUrl;
+  if (t.storeUrl) $('track-store').href = t.storeUrl;
+  else $('track-store').removeAttribute('href');
   $('track-count').textContent = tracks.length;
   renderLibrary();
 }
@@ -181,7 +187,9 @@ function renderLibrary() {
       title = document.createElement('strong'),
       artist = document.createElement('small');
     title.textContent = track.title;
-    artist.textContent = track.artist;
+    artist.textContent =
+      track.artist +
+      (track.preview ? ' · Fragmento de iTunes' : track.source === 'shared' ? ' · Compartida' : '');
     text.append(title, artist);
     button.append(text);
     button.onclick = () => {
@@ -200,18 +208,115 @@ async function addFiles(files) {
     toast('Selecciona un archivo de audio: MP3, WAV, OGG, M4A…');
     return;
   }
-  const first = tracks.length;
+  let first = -1;
   for (const file of accepted) {
     if (file.size > 500 * 1024 * 1024) {
       toast(`${file.name}: el límite por canción es 500 MB.`);
       continue;
     }
     const metadata = await readMetadata(file);
+    if (first < 0) first = tracks.length;
     tracks.push({ ...metadata, url: URL.createObjectURL(file), demo: false });
   }
   updateTrack();
-  if (tracks.length > first) await selectTrack(first);
+  if (first >= 0) await selectTrack(first);
   if (accepted.length !== files.length) toast('Se han omitido los archivos que no son de audio.');
+}
+
+let catalogueBusy = false;
+async function refreshCatalogue() {
+  if (catalogueBusy) return;
+  catalogueBusy = true;
+  $('library-retry').hidden = true;
+  $('library-status').textContent = 'Cargando tu biblioteca compartida…';
+  try {
+    const shared = await loadCatalogue();
+    for (const track of shared) if (!tracks.some((t) => t.id === track.id)) tracks.push(track);
+    $('library-status').textContent = shared.length
+      ? `${shared.length} canciones de tu biblioteca compartida. También puedes añadir archivos de este equipo.`
+      : 'Tu biblioteca compartida está vacía. Puedes añadir archivos de este equipo.';
+    updateTrack();
+  } catch {
+    $('library-status').textContent =
+      'No se pudo cargar la biblioteca compartida. La demo y tus archivos locales siguen disponibles.';
+    $('library-retry').hidden = false;
+  } finally {
+    catalogueBusy = false;
+  }
+}
+
+let searchController,
+  searchVersion = 0;
+function libraryTab(name) {
+  for (const panel of ['collection', 'search']) {
+    const active = panel === name;
+    $(`tab-${panel}`).setAttribute('aria-selected', String(active));
+    $(`tab-${panel}`).tabIndex = active ? 0 : -1;
+    $(`panel-${panel}`).hidden = !active;
+  }
+  if (name === 'search') $('music-query').focus();
+}
+function renderSearchResults(results) {
+  $('search-results').replaceChildren();
+  for (const track of results) {
+    const row = document.createElement('div');
+    row.className = 'search-result';
+    const button = document.createElement('button');
+    button.className = 'library-item';
+    button.setAttribute('aria-label', `Escuchar fragmento de ${track.title}, ${track.artist}`);
+    button.innerHTML = icon('play');
+    const text = document.createElement('span'),
+      title = document.createElement('strong'),
+      artist = document.createElement('small');
+    title.textContent = track.title;
+    artist.textContent = `${track.artist} · Fragmento ≈30 s`;
+    text.append(title, artist);
+    button.append(text);
+    button.onclick = () => {
+      let index = tracks.findIndex((t) => t.id === track.id);
+      if (index < 0) {
+        index = tracks.length;
+        tracks.push(track);
+      }
+      $('library-dialog').close();
+      void selectTrack(index);
+    };
+    const store = document.createElement('a');
+    store.href = track.storeUrl;
+    store.target = '_blank';
+    store.rel = 'noopener noreferrer';
+    store.textContent = 'Ver en iTunes ↗';
+    store.setAttribute('aria-label', `Ver ${track.title} en iTunes`);
+    row.append(button, store);
+    $('search-results').append(row);
+  }
+}
+async function runSearch(event) {
+  event.preventDefault();
+  const query = $('music-query').value.trim();
+  if (!query) {
+    $('music-query').focus();
+    return;
+  }
+  const version = ++searchVersion;
+  searchController?.abort();
+  searchController = new AbortController();
+  $('search-status').textContent = 'Buscando en iTunes…';
+  $('search-results').replaceChildren();
+  $('search-results').setAttribute('aria-busy', 'true');
+  try {
+    const results = await searchMusic(query, searchController.signal);
+    if (version !== searchVersion) return;
+    renderSearchResults(results);
+    $('search-status').textContent = results.length
+      ? `${results.length} resultados. Elige un fragmento para escucharlo.`
+      : 'No se han encontrado fragmentos. Prueba otro título o artista.';
+  } catch (error) {
+    if (version === searchVersion && error.name !== 'AbortError')
+      $('search-status').textContent = error.message;
+  } finally {
+    if (version === searchVersion) $('search-results').setAttribute('aria-busy', 'false');
+  }
 }
 
 // Real snapshots of each scene: no remote artwork or unrelated stock images.
@@ -417,6 +522,32 @@ $('file-input').onchange = (event) => {
 $('library-open').onclick = () => {
   $('library-dialog').showModal();
 };
+$('library-retry').onclick = refreshCatalogue;
+$('music-search').onsubmit = runSearch;
+for (const [index, name] of ['collection', 'search'].entries()) {
+  const tab = $(`tab-${name}`);
+  tab.onclick = () => libraryTab(name);
+  tab.onkeydown = (event) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const target =
+      event.key === 'Home'
+        ? 'collection'
+        : event.key === 'End'
+          ? 'search'
+          : ['search', 'collection'][index];
+    libraryTab(target);
+    $(`tab-${target}`).focus();
+  };
+}
+$('library-dialog').addEventListener('close', () => {
+  searchVersion++;
+  searchController?.abort();
+  if ($('search-results').getAttribute('aria-busy') === 'true') {
+    $('search-status').textContent = 'Búsqueda cancelada. Puedes volver a buscar.';
+    $('search-results').setAttribute('aria-busy', 'false');
+  }
+});
 $('info').onclick = () => {
   $('info-dialog').showModal();
 };
@@ -503,12 +634,14 @@ window.addEventListener('pagehide', (event) => {
   renderer.dispose();
   engine.dispose();
   demoWorker?.terminate();
-  for (const t of tracks) if (t.url) URL.revokeObjectURL(t.url);
+  searchController?.abort();
+  for (const t of tracks) if (t.url?.startsWith('blob:')) URL.revokeObjectURL(t.url);
 });
 renderLibrary();
 updatePlayback();
 // Prepare the original demo without opening an AudioContext or starting playback.
 void ensureDemo().catch((error) => toast(error.message));
+void refreshCatalogue();
 
 // Read-only instrumentation, opt-in and excluded from production by Vite.
 // Reading it never performs a second analyser sample or changes the simulation.

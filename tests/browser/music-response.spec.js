@@ -2,6 +2,12 @@ import { test, expect } from '@playwright/test';
 import { resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 
+test.beforeEach(async ({ page }) => {
+  await page.route('https://agascocompte.github.io/colored-music/library.json', (route) =>
+    route.fulfill({ json: { version: 1, tracks: [] } }),
+  );
+});
+
 for (const song of ['Shots', 'RiseUp']) {
   test(`${song}: real audio drives actions; detector observation does not create extra beats`, async ({
     page,

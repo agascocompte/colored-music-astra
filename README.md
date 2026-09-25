@@ -110,3 +110,13 @@ Comprobado en Chromium de escritorio con vistas de 1440 px y 390 px. Las pruebas
 Consulta [el análisis y la arquitectura](docs/ARCHITECTURE.md) para conocer los cambios respecto al proyecto original.
 
 La versión anterior se conserva en [agascocompte/colored-music](https://github.com/agascocompte/colored-music). Las pruebas de navegador que necesitan Shots o RiseUp se omiten automáticamente cuando esos archivos locales no están presentes.
+
+## Biblioteca compartida y búsqueda
+
+**Mi biblioteca → Mi colección** reúne la demo, las canciones compartidas y los archivos o fragmentos añadidos durante la sesión. Al abrir la app se consulta `https://agascocompte.github.io/colored-music/library.json`; los audios se reproducen desde `colored-music/sounds/`, sin copiarlos a Astra. La versión antigua también consume ese mismo catálogo.
+
+Para mantener las canciones de las dos webs, modifica únicamente [library.json en colored-music](https://github.com/agascocompte/colored-music/blob/main/library.json): añade una entrada (`id`, `title`, `artist` opcional, `url`) y sube su archivo a `sounds/`, o retira su entrada para ocultarla de ambas bibliotecas. Tras publicarse Pages, basta recargar las aplicaciones. Astra no necesita un nuevo despliegue. Un fallo de conexión muestra un botón para reintentar y no bloquea la demo ni los archivos locales.
+
+**Mi biblioteca → Buscar música** busca títulos y artistas mediante la API de iTunes. Los resultados ofrecen fragmentos de unos 30 segundos, atribución y enlace a la canción en la tienda; no son canciones completas. Se reproducen por streaming y se añaden una sola vez a la biblioteca de la sesión. No modifican el catálogo compartido. El servicio puede limitar peticiones o no disponer de determinados fragmentos.
+
+Las búsquedas usan JSONP de iTunes, con cancelación, tiempo límite y caché de resultados en memoria. El elemento de audio usa CORS anónimo para que Web Audio pueda analizar también fuentes remotas. No se usa un proxy ni se necesitan claves. Referencia: [iTunes Search API](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html).
