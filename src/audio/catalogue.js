@@ -1,4 +1,4 @@
-export const CATALOGUE_URL = 'https://agascocompte.github.io/colored-music/library.json';
+export const CATALOGUE_URL = 'https://agascocompte.github.io/colored-music-library/library.json';
 
 export function parseCatalogue(data, base = CATALOGUE_URL) {
   if (!data || data.version !== 1 || !Array.isArray(data.tracks))

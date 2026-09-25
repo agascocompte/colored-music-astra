@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-const catalogueUrl = 'https://agascocompte.github.io/colored-music/library.json';
+const catalogueUrl = 'https://agascocompte.github.io/colored-music-library/library.json';
 const previewUrl = 'https://audio-ssl.itunes.apple.com/test.m4a';
 const sharedTrack = {
   id: 'shots',
@@ -59,7 +59,7 @@ test('Shared songs play through the analyser and are removed on reload when the 
 }) => {
   let tracks = [sharedTrack];
   await page.route(catalogueUrl, (route) => route.fulfill({ json: { version: 1, tracks } }));
-  await page.route('https://agascocompte.github.io/colored-music/sounds/Shots.mp3', audio);
+  await page.route('https://agascocompte.github.io/colored-music-library/sounds/Shots.mp3', audio);
   await page.goto('/?debug=1');
   await expect(page.locator('#track-count')).toHaveText('2');
   await page.locator('#library-open').click();

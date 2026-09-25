@@ -49,7 +49,7 @@ La búsqueda de previews externos no se conserva: no era requisito de esta nueva
 
 ## Relación musical verificable
 
-La biblioteca remota tiene una sola fuente: `library.json` en el repositorio original `colored-music`, con rutas de audio relativas al catálogo. Ambas aplicaciones leen ese archivo; Astra resuelve sus URLs sin duplicar MP3 ni listas. El catálogo se carga sin bloquear el arranque, con validación, tiempo límite y reintento. Las adiciones locales se insertan después de leer sus metadatos, evitando que una respuesta tardía del catálogo cambie el índice de reproducción.
+La biblioteca remota tiene una sola fuente: `library.json` en el repositorio independiente `colored-music-library`, con rutas de audio relativas al catálogo. Ambas aplicaciones leen ese archivo; Astra resuelve sus URLs sin duplicar MP3 ni listas. El catálogo se carga sin bloquear el arranque, con validación, tiempo límite y reintento. Las adiciones locales se insertan después de leer sus metadatos, evitando que una respuesta tardía del catálogo cambie el índice de reproducción.
 
 La búsqueda añade una pestaña al diálogo de biblioteca. Usa el endpoint público de iTunes mediante JSONP documentado, control de resultados obsoletos, cancelación y límite de tiempo. Los fragmentos se distinguen de las canciones completas y conservan un enlace a la tienda. Se deduplican por `trackId`. Se usa `crossOrigin = 'anonymous'` antes de asignar cualquier fuente para evitar que Web Audio silencie el análisis de los audios remotos por CORS. Las búsquedas y archivos locales duran la sesión y no modifican el catálogo compartido.
 

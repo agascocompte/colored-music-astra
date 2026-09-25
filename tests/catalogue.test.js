@@ -16,7 +16,10 @@ test('Shared catalogue resolves audio relative to its host and rejects malformed
     ],
   });
   assert.equal(list.length, 1);
-  assert.equal(list[0].url, 'https://agascocompte.github.io/colored-music/sounds/Shots.mp3');
+  assert.equal(
+    list[0].url,
+    'https://agascocompte.github.io/colored-music-library/sounds/Shots.mp3',
+  );
   assert.throws(() => parseCatalogue({ tracks: [] }));
   assert.deepEqual(parseCatalogue({ version: 1, tracks: [] }), []);
 });

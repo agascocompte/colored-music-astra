@@ -113,9 +113,9 @@ La versión anterior se conserva en [agascocompte/colored-music](https://github.
 
 ## Biblioteca compartida y búsqueda
 
-**Mi biblioteca → Mi colección** reúne la demo, las canciones compartidas y los archivos o fragmentos añadidos durante la sesión. Al abrir la app se consulta `https://agascocompte.github.io/colored-music/library.json`; los audios se reproducen desde `colored-music/sounds/`, sin copiarlos a Astra. La versión antigua también consume ese mismo catálogo.
+**Mi biblioteca → Mi colección** reúne la demo, las canciones compartidas y los archivos o fragmentos añadidos durante la sesión. Al abrir la app se consulta `https://agascocompte.github.io/colored-music-library/library.json`; los audios se reproducen desde `colored-music-library/sounds/`, sin copiarlos a Astra. La versión antigua también consume ese mismo catálogo.
 
-Para mantener las canciones de las dos webs, modifica únicamente [library.json en colored-music](https://github.com/agascocompte/colored-music/blob/main/library.json): añade una entrada (`id`, `title`, `artist` opcional, `url`) y sube su archivo a `sounds/`, o retira su entrada para ocultarla de ambas bibliotecas. Tras publicarse Pages, basta recargar las aplicaciones. Astra no necesita un nuevo despliegue. Un fallo de conexión muestra un botón para reintentar y no bloquea la demo ni los archivos locales.
+Para mantener las canciones de las dos webs, modifica únicamente [library.json en colored-music-library](https://github.com/agascocompte/colored-music-library/blob/main/library.json): añade una entrada (`id`, `title`, `artist` opcional, `url`) y sube su archivo a `sounds/`, o retira su entrada para ocultarla de ambas bibliotecas. Tras publicarse Pages, basta recargar las aplicaciones. Astra no necesita un nuevo despliegue. Un fallo de conexión muestra un botón para reintentar y no bloquea la demo ni los archivos locales.
 
 **Mi biblioteca → Buscar música** busca títulos y artistas mediante la API de iTunes. Los resultados ofrecen fragmentos de unos 30 segundos, atribución y enlace a la canción en la tienda; no son canciones completas. Se reproducen por streaming y se añaden una sola vez a la biblioteca de la sesión. No modifican el catálogo compartido. El servicio puede limitar peticiones o no disponer de determinados fragmentos.
 

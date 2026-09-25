@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 
 test.beforeEach(async ({ page }) => {
-  await page.route('https://agascocompte.github.io/colored-music/library.json', (route) =>
+  await page.route('https://agascocompte.github.io/colored-music-library/library.json', (route) =>
     route.fulfill({ json: { version: 1, tracks: [] } }),
   );
 });
